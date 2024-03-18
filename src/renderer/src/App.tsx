@@ -14,14 +14,13 @@ export default function App() {
 
   return (
     <RootLayout className="divide-x-[1px] divide-white/50">
-      <SideBar className="p-2">
+      <SideBar className="py-2 px-3">
         <ActionButtonsRow className="flex justify-between mt-2" />
-        <NotePreviewList className="mt-3 space-y-1" />
+        <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
       </SideBar>
 
       <Content ref={contentContainerRef} className="bg-zinc-900/10">
         <FloatingNoteTitle className="pt-2" />
-        {/* <div className="grow"></div> */}
         <MarkdownEditor />
       </Content>
     </RootLayout>

@@ -12,8 +12,8 @@ export function RootLayout({ children, className, ...props }: ComponentProps<'ma
 
 export function SideBar({ className, children, ...props }: ComponentProps<'aside'>) {
   return (
-    <div className="w-[260px] flex flex-col items-start">
-      <TitleBar>asdf</TitleBar>
+    <div className="w-[290px] flex flex-col items-start">
+      {/* <TitleBar>asdf</TitleBar> */}
 
       <aside {...props} className={cn('grow overflow-y-auto w-full', className)}>
         {children}
