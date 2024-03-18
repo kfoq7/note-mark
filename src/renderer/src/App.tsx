@@ -1,35 +1,29 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { useRef } from 'react'
+import { Content, RootLayout, SideBar } from './layouts'
+import { NotePreviewList } from './components/NotePreviewList'
+import { MarkdownEditor } from './components/MarkdownEditor'
+import { FloatingNoteTitle } from './components/FloatingNoteTitle'
+import { ActionButtonsRow } from './components/ui/ActionButtonRow'
 
-function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+export default function App() {
+  const contentContainerRef = useRef<HTMLDivElement>(null)
+
+  const resetScroll = () => {
+    contentContainerRef.current?.scrollTo(0, 0)
+  }
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <RootLayout className="divide-x-[1px] divide-white/50">
+      <SideBar className="p-2">
+        <ActionButtonsRow className="flex justify-between mt-2" />
+        <NotePreviewList className="mt-3 space-y-1" />
+      </SideBar>
+
+      <Content ref={contentContainerRef} className="bg-zinc-900/10">
+        <FloatingNoteTitle className="pt-2" />
+        {/* <div className="grow"></div> */}
+        <MarkdownEditor />
+      </Content>
+    </RootLayout>
   )
 }
-
-export default App

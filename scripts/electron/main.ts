@@ -1,7 +1,8 @@
+import { join } from 'node:path'
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+// import icon from '../../resources/icon.png?asset'
+// import icon from '../../resources/icon.png'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -9,7 +10,7 @@ function createWindow(): void {
     height: 720,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    // ...(process.platform === 'linux' ? { icon } : {}),
     center: true,
     title: 'NoteMark',
     frame: false,
