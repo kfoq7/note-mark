@@ -32,3 +32,5 @@ $ pnpm build:mac
 # For Linux
 $ pnpm build:linux
 ```
+
+Base on @gionathas NoteMark [video tutorial](https://www.youtube.com/watch?v=t8ane4BDyC8) / [Original repo](https://github.com/gionathas/NoteMark)

@@ -1,27 +1,44 @@
 import { atom } from 'jotai'
-import { noteMocks } from './mocks'
+import { unwrap } from 'jotai/utils'
 import type { NoteInfo } from '@shared/models'
 
-export const notesAtom = atom<NoteInfo[]>(noteMocks)
+export const loadNotes = async () => {
+  const notes = await window.context.getNotes()
+
+  return notes.sort((a, b) => b.lastEditTime - a.lastEditTime)
+}
+
+const notesAtomAsync = atom<NoteInfo[] | Promise<NoteInfo[]>>(loadNotes())
+
+export const notesAtom = unwrap(notesAtomAsync, prev => prev)
 
 export const selectedIndexAtom = atom<number | null>(null)
 
-export const selectedNoteAtom = atom(get => {
+const selectedNoteAtomAsync = atom(async get => {
   const notes = get(notesAtom)
   const selectedIndex = get(selectedIndexAtom)
 
   if (selectedIndex == null || !notes) return null
 
   const selectedNote = notes[selectedIndex]
+  const noteContent = await window.context.readNote(selectedNote.title)
 
   return {
     ...selectedNote,
-    content: `Hello from Note ${selectedIndex}`
+    content: noteContent
   }
 })
 
+export const selectedNoteAtom = unwrap(
+  selectedNoteAtomAsync,
+  prev => prev ?? { title: '', content: '', lastEditTime: Date.now() }
+)
+
 export const createEmptyNoteAtom = atom(null, (get, set) => {
   const notes = get(notesAtom)
+
+  if (!notes) return
+
   const newNote: NoteInfo = {
     title: `Note ${notes.length + 1}`,
     lastEditTime: Date.now()
@@ -35,7 +52,7 @@ export const deleteNoteAtom = atom(null, (get, set) => {
   const notes = get(notesAtom)
   const selectedNote = get(selectedNoteAtom)
 
-  if (!selectedNote) return
+  if (!selectedNote || !notes) return
 
   set(
     notesAtom,

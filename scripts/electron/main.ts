@@ -1,8 +1,8 @@
 import { join } from 'node:path'
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-// import icon from '../../resources/icon.png?asset'
-// import icon from '../../resources/icon.png'
+import { getNotes, readNote } from '@/lib'
+import { GetNotes, ReadNote } from '@shared/types'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -10,7 +10,6 @@ function createWindow(): void {
     height: 720,
     show: false,
     autoHideMenuBar: true,
-    // ...(process.platform === 'linux' ? { icon } : {}),
     center: true,
     title: 'NoteMark',
     frame: false,
@@ -22,11 +21,8 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
       contextIsolation: true
-      // devTools: true
     }
   })
-
-  // mainWindow.
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -62,6 +58,9 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.handle('getNotes', (_, ...args: Parameters<GetNotes>) => getNotes(...args))
+  ipcMain.handle('readNote', (_, ...args: Parameters<ReadNote>) => readNote(...args))
 
   createWindow()
 
